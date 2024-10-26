@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance & Rating System</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url('loginbg.jpg') no-repeat center center fixed; /* Set the background image */
+            background-size: cover; /* Cover the entire background */
+            display: flex;
+            padding: 20px;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .calendar, .timetable, .scoreboard {
+            flex: 1;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #ffffff, #f0f4f8);
+            transition: transform 0.3s;
+        }
+
+        .calendar:hover, .timetable:hover, .scoreboard:hover {
+            transform: translateY(-5px);
+        }
+
+        h2, h3 {
+            color: #333333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 15px 0 5px;
+            color: #555;
+        }
+
+        input[type="date"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="date"]:focus, select:focus {
+            border-color: #60a5fa;
+        }
+
+        button {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+            transform: scale(1.02);
+        }
+
+        button:active {
+            background-color: #1e40af;
+        }
+
+        .period-button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        .period-button:hover {
+            background-color: #2563eb;
+            transform: scale(1.02);
+        }
+
+        .rating-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .emoji-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .emoji {
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .emoji:hover {
+            transform: scale(1.2);
+        }
+
+        /* Scoreboard Styles */
+        .scoreboard {
+            flex: 1;
+            background-color: #ffb4b4;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .scoreboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .scoreboard-table th, .scoreboard-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            font-size: 1em;
+        }
+
+        .scoreboard-table th {
+            background-color: #f2dede;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 12px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .calendar, .timetable, .scoreboard {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="calendar">
+            <h3>Select Date</h3>
+            <input type="date" id="datePicker" onchange="loadTimetable()">
+            <div id="timetable"></div>
+        </div>
+
+        <div class="timetable">
+            <h2>Timetable</h2>
+            <div id="periods"></div>
+            <div class="rating-container" id="ratingContainer">
+                <label for="performance">Rate the Faculty:</label>
+                <div class="emoji-container">
+                    <span class="emoji" onclick="submitRating(1)">😠</span>
+                    <span class="emoji" onclick="submitRating(2)">😕</span>
+                    <span class="emoji" onclick="submitRating(3)">😐</span>
+                    <span class="emoji" onclick="submitRating(4)">🙂</span>
+                    <span class="emoji" onclick="submitRating(5)">😃</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="scoreboard">
+            <h3>Worst Faculty of the Day!🙏</h3>
+            <table class="scoreboard-table">
+                <thead>
+                    <tr>
+                        <th>Faculty Name</th>
+                        <th>Average Rating</th>
+                    </tr>
+                </thead>
+                <tbody id="scoreboardBody">
+                    <!-- Worst faculty entries will be added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="attendanceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Mark Attendance</h3>
+            <p id="facultyInfo"></p>
+            <label>
+                <input type="checkbox" id="presenceCheckbox"> Faculty is Present
+            </label>
+            
+            <label for="feedback">Feedback:</label>
+            <textarea id="feedback" rows="4" placeholder="Enter your feedback here..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px;"></textarea>
+            
+            <button onclick="confirmAttendance()">Confirm</button>
+        </div>
+    </div>
+
+    <script>
+        const weeklyTimetable = {
+            1: ['LSD', 'DS', 'OOPS', 'DE', 'Maths', 'OOPS'],
+            2: ['DS', 'Maths', 'DE', 'Sustain.engg', 'Maths', 'LSD'],
+            3: ['Java / DS Lab', 'OOPS', 'DS', 'Activity'],
+            4: ['OOPS', 'LSD', 'Maths', 'DS', 'Sustain.engg', 'Minor'],
+            5: ['Java / DS Lab', 'LSD', 'Minor'],
+        };
+
+        const facultyMapping = {
+            'LSD': 'Prof. Aishwarya Jijo',
+            'DS': 'Prof. Nizar',
+            'OOPS': 'Prof. Anish A Aziz',
+            'DE': 'Prof. Ankitha Praveen ',
+            'Maths': 'Prof. Sidhartha Sharma',
+            'Sustain.engg': 'Prof. Suz',
+            'Java / D Lab': 'Prof. Anish',
+            'Activity': 'Prof. Gopal',
+            'Minor': 'Prof. Nandu'
+        };
+
+        let selectedSubject = '';
+        let ratings = {};
+        let ratingCounts = {};
+
+        function loadTimetable() {
+            const dateInput = document.getElementById("datePicker").value;
+            const selectedDate = new Date(dateInput);
+            const day = selectedDate.getUTCDay();
+            const periodsDiv = document.getElementById("periods");
+            periodsDiv.innerHTML = '';
+
+            const periods = weeklyTimetable[day];
+            if (periods) {
+                periods.forEach(subject => {
+                    const periodButton = document.createElement("button");
+                    periodButton.innerText = subject;
+                    periodButton.className = 'period-button';
+                    periodButton.onclick = () => showAttendanceModal(subject);
+                    periodsDiv.appendChild(periodButton);
+                });
+            } else {
+                periodsDiv.innerHTML = '<p>No classes scheduled for this day.</p>';
+            }
+        }
+
+        function showAttendanceModal(subject) {
+            selectedSubject = subject;
+            document.getElementById("facultyInfo").innerText = `Faculty: ${facultyMapping[subject]}`;
+            document.getElementById("attendanceModal").style.display = "block";
+            document.getElementById("ratingContainer").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("attendanceModal").style.display = "none";
+        }
+
+        function confirmAttendance() {
+            const facultyPresent = document.getElementById("presenceCheckbox").checked;
+            const feedback = document.getElementById("feedback").value;
+
+            console.log(`Faculty: ${facultyMapping[selectedSubject]}, Present: ${facultyPresent}, Feedback: ${feedback}`);
+            closeModal();
+        }
+
+        function submitRating(rating) {
+            const faculty = facultyMapping[selectedSubject];
+            if (!ratings[faculty]) {
+                ratings[faculty] = 0;
+                ratingCounts[faculty] = 0;
+            }
+            ratings[faculty] += rating;
+            ratingCounts[faculty] += 1;
+            updateScoreboard();
+        }
+
+        function updateScoreboard() {
+            const scoreboardBody = document.getElementById("scoreboardBody");
+            scoreboardBody.innerHTML = ''; // Clear existing scoreboard entries
+
+            const facultyRatings = Object.keys(ratings).map(faculty => {
+                return {
+                    faculty,
+                    averageRating: (ratings[faculty] / ratingCounts[faculty]).toFixed(2)
+                };
+            });
+
+            facultyRatings.sort((a, b) => a.averageRating - b.averageRating);
+
+            facultyRatings.forEach(({ faculty, averageRating }) => {
+                const newRow = scoreboardBody.insertRow();
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.innerText = faculty;
+                cell2.innerText = averageRating;
+            });
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById("attendanceModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

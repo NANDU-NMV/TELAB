@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TELAB - Login</title>
+    <link rel="icon" type="image/x-icon" href="cropped_image.png">
+
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Times New Roman', Times, serif; /* Set font to Times New Roman */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Hide overflow to prevent scrollbars */
+        }
+
+        /* Background video styling */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Scale the video to cover the entire background */
+            z-index: -1; /* Set video behind content */
+        }
+
+        /* Overlay to improve readability */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(240, 234, 234, 0.3);
+            z-index: 0;
+        }
+
+        /* Login container */
+        .login-container {
+            position: relative;
+            z-index: 1; /* Ensure content is above the overlay */
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s;
+            animation: scaleIn 0.5s ease-in-out; /* Scaling animation */
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0.8);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Heading styles */
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+        }
+
+        /* Input styles */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #5316e0;
+            box-shadow: 0 0 5px rgba(83, 22, 224, 0.5);
+            outline: none;
+            background-color: #e0f7fa; /* Light blue background on focus */
+        }
+
+        /* Login Button styles */
+        .login-button {
+            background-color: #5316e0;
+            color: #fff;
+            padding: 12px 20px; /* Adjust padding to make the button size visually balanced */
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 0 auto; /* Center-align the button */
+            display: block; /* Ensures the button is a block element for centering */
+        }
+
+        .login-button:hover {
+            background-color: #e61e28;
+            transform: translateY(-2px);
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* Link styles */
+        .forgot-password {
+            display: block;
+            margin-top: 10px;
+            color: #5316e0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background video element -->
+    <video autoplay muted loop class="background-video">
+        <source src="bg2vdeo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="overlay"></div>
+
+    <div class="login-container">
+        <h2>Login to TELAB</h2>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <input type="text" placeholder="Username" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit" class="login-button">Login</button>
+        </form>
+        <a href="#" class="forgot-password" onclick="showForgotPasswordMessage()">Forgot Password?</a>
+    </div>
+
+    <footer> <b>2024 ETLAB</b> &nbsp;&copy; &nbsp; All rights reserved</footer>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent the default form submission
+            window.location.href = "home.html"; // Change this to your next page URL
+        }
+
+        function showForgotPasswordMessage() {
+            alert("Then you can't make the revenge!"); // Display alert message
+        }
+    </script>
+</body>
+</html>

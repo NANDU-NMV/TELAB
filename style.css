@@ -1,0 +1,108 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Header styling */
+header {
+    background-color: #3b5998;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+/* Section Titles */
+h2 {
+    margin-bottom: 15px;
+}
+
+/* Attendance Section Styling */
+.attendance-section, .leaderboard-section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    width: 80%;
+    max-width: 700px;
+    margin: 20px 0;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+}
+
+th {
+    background-color: #3b5998;
+    color: white;
+}
+
+select {
+    padding: 5px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Mood Icons Styling */
+.mood-icons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.mood-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.mood-icon:hover {
+    transform: scale(1.2);
+}
+
+/* Leaderboard Styling */
+.leaderboard {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.leader {
+    display: flex;
+    justify-content: space-between;
+    background-color: #e9eff9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.leader-name {
+    font-weight: bold;
+    color: #3b5998;
+}
+
+.leader-title {
+    font-size: 0.9rem;
+    color: #555;
+}
