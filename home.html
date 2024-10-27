@@ -14,8 +14,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('loginbg.jpg') no-repeat center center fixed; /* Set the background image */
-            background-size: cover; /* Cover the entire background */
+            background: url('loginbg.jpg') no-repeat center center fixed;
+            background-size: cover;
             display: flex;
             padding: 20px;
         }
@@ -291,44 +291,31 @@
             if (periods) {
                 periods.forEach(subject => {
                     const periodButton = document.createElement("button");
+                    periodButton.className = "period-button";
                     periodButton.innerText = subject;
-                    periodButton.className = 'period-button';
-                    periodButton.onclick = () => showAttendanceModal(subject);
+                    periodButton.onclick = () => selectSubject(subject);
                     periodsDiv.appendChild(periodButton);
                 });
-            } else {
-                periodsDiv.innerHTML = '<p>No classes scheduled for this day.</p>';
             }
         }
 
-        function showAttendanceModal(subject) {
+        function selectSubject(subject) {
             selectedSubject = subject;
-            document.getElementById("facultyInfo").innerText = `Faculty: ${facultyMapping[subject]}`;
-            document.getElementById("attendanceModal").style.display = "block";
-            document.getElementById("ratingContainer").style.display = "block";
-        }
-
-        function closeModal() {
-            document.getElementById("attendanceModal").style.display = "none";
-        }
-
-        function confirmAttendance() {
-            const facultyPresent = document.getElementById("presenceCheckbox").checked;
-            const feedback = document.getElementById("feedback").value;
-
-            console.log(`Faculty: ${facultyMapping[selectedSubject]}, Present: ${facultyPresent}, Feedback: ${feedback}`);
-            closeModal();
+            document.getElementById("ratingContainer").style.display = 'block';
         }
 
         function submitRating(rating) {
             const faculty = facultyMapping[selectedSubject];
-            if (!ratings[faculty]) {
-                ratings[faculty] = 0;
-                ratingCounts[faculty] = 0;
+            if (faculty) {
+                if (!ratings[faculty]) {
+                    ratings[faculty] = 0;
+                    ratingCounts[faculty] = 0;
+                }
+                ratings[faculty] += rating;
+                ratingCounts[faculty]++;
+                updateScoreboard();
+                document.getElementById("ratingContainer").style.display = 'none';
             }
-            ratings[faculty] += rating;
-            ratingCounts[faculty] += 1;
-            updateScoreboard();
         }
 
         function updateScoreboard() {
@@ -344,20 +331,15 @@
 
             facultyRatings.sort((a, b) => a.averageRating - b.averageRating);
 
-            facultyRatings.forEach(({ faculty, averageRating }) => {
+            facultyRatings.forEach(({ faculty, averageRating }, index) => {
                 const newRow = scoreboardBody.insertRow();
                 const cell1 = newRow.insertCell(0);
                 const cell2 = newRow.insertCell(1);
-                cell1.innerText = faculty;
+
+                // Add crown to the first position
+                cell1.innerText = index === 0 ? `👑 ${faculty}` : faculty;
                 cell2.innerText = averageRating;
             });
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById("attendanceModal");
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
         }
     </script>
 </body>
