@@ -14,8 +14,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: url('loginbg.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: url('loginbg.jpg') no-repeat center center fixed; /* Set the background image */
+            background-size: cover; /* Cover the entire background */
             display: flex;
             padding: 20px;
         }
@@ -197,6 +197,42 @@
                 margin-bottom: 20px;
             }
         }
+
+        .about-us-container {
+    margin-top: 20px;
+}
+
+
+        /* Footer Styles */
+        .about-us-container {
+            margin: 0;
+            padding: 20px;
+            position: fixed;
+            bottom: 20px; /* Fix the button to the bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+        }
+
+        #aboutUsButton {
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #aboutUsButton:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+
+        #aboutUsButton:active {
+            background-color: #1e40af;
+        }
+
     </style>
 </head>
 <body>
@@ -291,56 +327,103 @@
             if (periods) {
                 periods.forEach(subject => {
                     const periodButton = document.createElement("button");
-                    periodButton.className = "period-button";
                     periodButton.innerText = subject;
-                    periodButton.onclick = () => selectSubject(subject);
+                    periodButton.className = 'period-button';
+                    periodButton.onclick = () => showAttendanceModal(subject);
                     periodsDiv.appendChild(periodButton);
                 });
+            } else {
+                periodsDiv.innerHTML = '<p>No classes scheduled for this day.</p>';
             }
         }
 
-        function selectSubject(subject) {
+        function showAttendanceModal(subject) {
             selectedSubject = subject;
-            document.getElementById("ratingContainer").style.display = 'block';
+            document.getElementById("facultyInfo").innerText = `Faculty: ${facultyMapping[subject]}`;
+            document.getElementById("attendanceModal").style.display = "block";
+            document.getElementById("ratingContainer").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("attendanceModal").style.display = "none";
+        }
+
+        function confirmAttendance() {
+            const facultyPresent = document.getElementById("presenceCheckbox").checked;
+            const feedback = document.getElementById("feedback").value;
+
+            console.log(`Faculty: ${facultyMapping[selectedSubject]}, Present: ${facultyPresent}, Feedback: ${feedback}`);
+            closeModal();
         }
 
         function submitRating(rating) {
             const faculty = facultyMapping[selectedSubject];
-            if (faculty) {
-                if (!ratings[faculty]) {
-                    ratings[faculty] = 0;
-                    ratingCounts[faculty] = 0;
-                }
-                ratings[faculty] += rating;
-                ratingCounts[faculty]++;
-                updateScoreboard();
-                document.getElementById("ratingContainer").style.display = 'none';
+            if (!ratings[faculty]) {
+                ratings[faculty] = 0;
+                ratingCounts[faculty] = 0;
             }
+            ratings[faculty] += rating;
+            ratingCounts[faculty] += 1;
+            updateScoreboard();
         }
 
         function updateScoreboard() {
-            const scoreboardBody = document.getElementById("scoreboardBody");
-            scoreboardBody.innerHTML = ''; // Clear existing scoreboard entries
+    const scoreboardBody = document.getElementById("scoreboardBody");
+    scoreboardBody.innerHTML = ''; // Clear existing scoreboard entries
 
-            const facultyRatings = Object.keys(ratings).map(faculty => {
-                return {
-                    faculty,
-                    averageRating: (ratings[faculty] / ratingCounts[faculty]).toFixed(2)
-                };
-            });
+    const facultyRatings = Object.keys(ratings).map(faculty => {
+        return {
+            faculty,
+            averageRating: (ratings[faculty] / ratingCounts[faculty]).toFixed(2)
+        };
+    });
 
-            facultyRatings.sort((a, b) => a.averageRating - b.averageRating);
+    facultyRatings.sort((a, b) => a.averageRating - b.averageRating);
 
-            facultyRatings.forEach(({ faculty, averageRating }, index) => {
-                const newRow = scoreboardBody.insertRow();
-                const cell1 = newRow.insertCell(0);
-                const cell2 = newRow.insertCell(1);
+    facultyRatings.forEach(({ faculty, averageRating }, index) => {
+        const newRow = scoreboardBody.insertRow();
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
 
-                // Add crown to the first position
-                cell1.innerText = index === 0 ? `👑 ${faculty}` : faculty;
-                cell2.innerText = averageRating;
-            });
+        // Add crown to the first position
+        cell1.innerText = index === 0 ? `👑 ${faculty}` : faculty;
+        cell2.innerText = averageRating;
+    });
+}
+
+        window.onclick = function(event) {
+            const modal = document.getElementById("attendanceModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
         }
+
+        function openFoundersModal() {
+    document.getElementById('foundersModal').style.display = 'block';
+}
+
+function closeFoundersModal() {
+    document.getElementById('foundersModal').style.display = 'none';
+}
+
     </script>
+<footer>
+<div class="about-us-container" style="text-align: center; margin-top: 20px;">
+    <button id="aboutUsButton" onclick="openFoundersModal()">About Us</button>
+</div>
+
+<div id="foundersModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeFoundersModal()">&times;</span>
+        <h3>Us</h3>
+        <p>Our motive is a website like ETLAB but instead the students mark the attendance of teachers, rank them based on their lectures for the day. We also get to give anonymous feedback too! Look whos the boss now??
+           <h4> Got ideas or feedback? We’d love to hear from you! Don’t hesitate to reach out and connect with us. Your insights can make a difference!</h4>
+           <a href="https://www.instagram.com/nannddhhu/" > NANNDDHHU</a>&nbsp; |&nbsp; <a href="https://www.instagram.com/ivaneeyyy/" > IVAN</a>&nbsp; |&nbsp; <a href="https://www.instagram.com/hrtkrs/" > HRITIK</a>&nbsp; 
+
+
+        </p>
+    </div>
+</div>
+</footer>
 </body>
 </html>
