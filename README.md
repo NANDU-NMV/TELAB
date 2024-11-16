@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/9c6831b5-28bb-42ca-800e-c7ef36ab6c0f)<img width="1280" alt="readme-banner" src="https://github.com/user-attachments/assets/35332e92-44cb-425b-9dff-27bcf1023c6c">
+<img width="1280" alt="readme-banner" src="https://github.com/user-attachments/assets/35332e92-44cb-425b-9dff-27bcf1023c6c">
 
 # TELAB 🎯
 Website Link    :    https://deluxe-sunshine-e0ccd1.netlify.app/
